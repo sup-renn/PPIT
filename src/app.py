@@ -8,7 +8,7 @@ import uuid
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 UPLOAD_FOLDER = 'static/uploads/events'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
