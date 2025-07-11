@@ -1,13 +1,20 @@
-from flask import Flask, request, jsonify
+import json
 import os
 
-app = Flask(__name__)
+def handler(request):
+    if request.method != "POST":
+        return {
+            "statusCode": 405,
+            "body": json.dumps({"error": "Method Not Allowed"})
+        }
 
-@app.route("/api/verify", methods=["POST"])
-def verify():
-    data = request.json
-    username_input = data.get('username')
-    password_input = data.get('password')
+    try:
+        body = request.json
+    except Exception:
+        body = json.loads(request.body)
+
+    username_input = body.get("username")
+    password_input = body.get("password")
 
     current_username = os.getenv('USERNAME')
     current_password = os.getenv('PASSWORD')
@@ -23,6 +30,12 @@ def verify():
         current_password and password_input and
         current_password.strip() == password_input.strip()
     ):
-        return jsonify({"success": True}), 200
+        return {
+            "statusCode": 200,
+            "body": json.dumps({"success": True})
+        }
     else:
-        return jsonify({"error": "Username atau password salah!"}), 401
+        return {
+            "statusCode": 401,
+            "body": json.dumps({"error": "Username atau password salah!"})
+        }
