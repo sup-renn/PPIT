@@ -111,15 +111,7 @@ def change_password():
     if len(new) < 6:
         return jsonify({'error': 'Password baru minimal 6 karakter!'}), 400
     
-    envfile = find_dotenv()
-    if not envfile :
-        envfile = '.env'
-    
-    set_key(envfile, 'PASSWORD', new)
-
-    os.environ['PASSWORD'] = new
-
-    return jsonify({'success': True})
+    return jsonify({'success': True}) # will not change password, need to change password manually
 
 @app.route("/verify", methods=['POST'])
 def verify():
