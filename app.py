@@ -92,34 +92,14 @@ def delete_event(event_id):
         return jsonify({'error': f'Failed to delete event: {str(e)}'}), 500
 
 
-
+#updated
 @app.route('/change-password', methods=['POST'])
 def change_password():
-    data = request.json 
-    old = data.get('oldPassword')
-    new = data.get('newPassword')
-    confirm = data.get('confirmPassword')
+    return jsonify({
+        'error': 'Password changes are not supported on this server. Please update PASSWORD manually in Vercel.'
+    }), 400
 
-    current = os.getenv('PASSWORD')
 
-    if old != current:
-        return jsonify({'error': 'Password lama tidak sesuai!'}), 400
-
-    if new != confirm:
-        return jsonify({'error': 'Password baru dan konfirmasi tidak sama!'}), 400
-
-    if len(new) < 6:
-        return jsonify({'error': 'Password baru minimal 6 karakter!'}), 400
-    
-    envfile = find_dotenv()
-    if not envfile :
-        envfile = '.env'
-    
-    set_key(envfile, 'PASSWORD', new)
-
-    os.environ['PASSWORD'] = new
-
-    return jsonify({'success': True})
 
 @app.route("/verify", methods=['POST'])
 def verify():
