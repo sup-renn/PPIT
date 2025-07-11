@@ -111,9 +111,23 @@ def change_password():
     if len(new) < 6:
         return jsonify({'error': 'Password baru minimal 6 karakter!'}), 400
     
+<<<<<<< HEAD
     return jsonify({'success': True}) # will not change password, need to change password manually
 
 @app.route("verify", methods=['POST'])
+=======
+    envfile = find_dotenv()
+    if not envfile :
+        envfile = '.env'
+    
+    set_key(envfile, 'PASSWORD', new)
+
+    os.environ['PASSWORD'] = new
+
+    return jsonify({'success': True})
+
+@app.route("/verify", methods=['POST'])
+>>>>>>> 8a3b338 (Initial commit)
 def verify():
     data = request.json
     username_input = data.get('username')
@@ -122,11 +136,14 @@ def verify():
     current_username = os.getenv('USERNAME')
     current_password = os.getenv('PASSWORD')
 
+<<<<<<< HEAD
     print("INPUT username:", repr(username_input))
     print("INPUT password:", repr(password_input))
     print("ENV username:", repr(current_username))
     print("ENV password:", repr(current_password))
 
+=======
+>>>>>>> 8a3b338 (Initial commit)
     if current_username == username_input and current_password == password_input :
         return jsonify({'success': True}), 200
     else :
