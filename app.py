@@ -92,14 +92,34 @@ def delete_event(event_id):
         return jsonify({'error': f'Failed to delete event: {str(e)}'}), 500
 
 
-#updated
+
 @app.route('/change-password', methods=['POST'])
 def change_password():
-    return jsonify({
-        'error': 'Password changes are not supported on this server. Please update PASSWORD manually in Vercel.'
-    }), 400
+    data = request.json 
+    old = data.get('oldPassword')
+    new = data.get('newPassword')
+    confirm = data.get('confirmPassword')
 
+    current = os.getenv('PASSWORD')
 
+    if old != current:
+        return jsonify({'error': 'Password lama tidak sesuai!'}), 400
+
+    if new != confirm:
+        return jsonify({'error': 'Password baru dan konfirmasi tidak sama!'}), 400
+
+    if len(new) < 6:
+        return jsonify({'error': 'Password baru minimal 6 karakter!'}), 400
+    
+    envfile = find_dotenv()
+    if not envfile :
+        envfile = '.env'
+    
+    set_key(envfile, 'PASSWORD', new)
+
+    os.environ['PASSWORD'] = new
+
+    return jsonify({'success': True})
 
 @app.route("/verify", methods=['POST'])
 def verify():
@@ -109,6 +129,11 @@ def verify():
 
     current_username = os.getenv('USERNAME')
     current_password = os.getenv('PASSWORD')
+
+    print("INPUT username:", repr(username_input))
+    print("INPUT password:", repr(password_input))
+    print("ENV username:", repr(current_username))
+    print("ENV password:", repr(current_password))
 
     if current_username == username_input and current_password == password_input :
         return jsonify({'success': True}), 200
