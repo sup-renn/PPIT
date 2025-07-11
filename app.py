@@ -113,7 +113,7 @@ def change_password():
     
     return jsonify({'success': True}) # will not change password, need to change password manually
 
-@app.route("/api/verify", methods=['POST'])
+@app.route("verify", methods=['POST'])
 def verify():
     data = request.json
     username_input = data.get('username')
