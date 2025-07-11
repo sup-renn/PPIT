@@ -3,7 +3,7 @@ import os
 
 app = Flask(__name__)
 
-@app.route('/api/verify', methods=['POST'])
+@app.route('/', methods=['POST'])  # 👈 IMPORTANT: must be '/'
 def verify():
     data = request.json
     username_input = data.get('username')
@@ -17,8 +17,5 @@ def verify():
     else:
         return jsonify({'error': 'Kesalahan terjadi di username atau password'}), 401
 
-# For Vercel Python Runtime:
-# Use 'app' as your entrypoint
-
-# The handler that Vercel looks for:
+# Vercel Python serverless expects 'app' as the handler:
 handler = app
