@@ -1329,108 +1329,69 @@
 
         document.getElementById('eventForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const submitBtn = document.getElementById('saveEventBtn');
-            const originalText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Menyimpan...';
-            
-            try {
-                // First, upload the image
-                const fileInput = document.getElementById('eventImageInput');
-                const file = fileInput.files[0];
-                
-                if (!file) {
-                    throw new Error('Please select an image file');
-                }
-                
-                // Show upload progress
-                document.getElementById('uploadProgress').style.display = 'block';
-                document.getElementById('uploadStatus').textContent = 'Uploading image...';
-                
-                // Create FormData for file upload
-                const uploadFormData = new FormData();
-                uploadFormData.append('eventImage', file);
-                
-                // Upload image
-                const uploadResponse = await fetch('/api/upload-event', {
-                    method: 'POST',
-                    body: uploadFormData
-                });
-                
-                const uploadResult = await uploadResponse.json();
-                
-                if (!uploadResponse.ok) {
-                    throw new Error(uploadResult.error || 'Upload failed');
-                }
-                
-                // Update progress
-                document.getElementById('uploadStatus').textContent = 'Saving event...';
-                
-                // Create event data with uploaded image URL
-                const formData = new FormData(this);
-                const event = {
-                    title: formData.get('title'),
-                    date: formData.get('date'),
-                    imageUrl: uploadResult.imageUrl, // Use uploaded image URL
-                    time: formData.get('time'),
-                    location: formData.get('location'),
-                    category: formData.get('category'),
-                    description: formData.get('description')
-                };
+            const formData = new FormData(this); // includes title, date, etc.
 
-                // Save event to localStorage
-                storage.add('events', event);
-                
-                // Hide progress and show success
-                document.getElementById('uploadProgress').style.display = 'none';
-                showSuccess('Event berhasil ditambahkan!');
-                hideEventForm();
-                loadEvents();
-                
-            } catch (error) {
-                document.getElementById('uploadProgress').style.display = 'none';
-                alert('Error: ' + error.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
+            const res = await fetch('/api/upload-event', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await res.json();
+            if (res.ok) {
+                alert('Event created successfully!');
+                console.log(result);
+            } else {
+                alert('Error: ' + result.error);
             }
         });
 
-        function loadEvents() {
-            const events = storage.get('events');
+        async function loadEvents() {
             const tbody = document.getElementById('eventsTableBody');
 
-            if (events.length > 0) {
-                tbody.innerHTML = events.map(event => `
-                <tr onclick="openEventModal('${event.id}')">
-                    <td>
-                    ${event.imageUrl ? `<img src="${event.imageUrl}" style="max-height:50px; border-radius:4px; margin-right:8px;">` : ''}
-                    ${event.title}
-                    </td>
-                    <td>${new Date(event.date).toLocaleDateString('id-ID')}</td>
-                    <td>${event.location}</td>
-                    <td><span class="badge">${event.category}</span></td>
-                    <td>
-                    <div class="table-actions">
-                        <button class="btn-edit" onclick="editEvent('${event.id}'); event.stopPropagation();">Edit</button>
-                        <button class="btn-delete" onclick="deleteEvent('${event.id}'); event.stopPropagation();">Hapus</button>
-                    </div>
-                    </td>
-                </tr>
-                `).join('');
+            try {
+                const res = await fetch('/api/get-events');
+                const events = await res.json();
 
-            } else {
+                if (events.length > 0) {
+                    tbody.innerHTML = events.map(event => `
+                        <tr onclick="openEventModal('${event.id}')">
+                            <td>
+                                ${event.image_url ? `<img src="${event.image_url}" style="max-height:50px; border-radius:4px; margin-right:8px;">` : ''}
+                                ${event.title}
+                            </td>
+                            <td>${new Date(event.date).toLocaleDateString('id-ID')}</td>
+                            <td>${event.location || ''}</td>
+                            <td><span class="badge">${event.category || ''}</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="btn-edit" onclick="editEvent('${event.id}'); event.stopPropagation();">Edit</button>
+                                    <button class="btn-delete" onclick="deleteEvent('${event.id}'); event.stopPropagation();">Hapus</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                <div class="empty-state-icon">📅</div>
+                                <p>Belum ada event. Klik tombol "Tambah Event" untuk memulai.</p>
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch (err) {
+                console.error('Error loading events:', err);
                 tbody.innerHTML = `
-                <tr>
-                    <td colspan="5" class="empty-state">
-                    <div class="empty-state-icon">📅</div>
-                    <p>Belum ada event. Klik tombol "Tambah Event" untuk memulai.</p>
-                    </td>
-                </tr>
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <p>Gagal memuat event dari server.</p>
+                        </td>
+                    </tr>
                 `;
             }
         }
+
 
         //changes here, for the modal picture to pop up
         function openEventModal(eventId) {

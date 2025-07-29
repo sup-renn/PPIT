@@ -2724,39 +2724,44 @@ venve<!DOCTYPE html>
         }
 
         async function renderEvents() {
-            const events = storage.get('events');
-            const eventsGrid = document.getElementById('eventsGrid');
+            const eventsGrid = document.getElementById('event-list'); // ✅ make sure the ID matches your HTML
 
-            if (events.length === 0) {
-                eventsGrid.innerHTML = '<p class="empty-state" style="grid-column: 1/-1;">Belum ada event.</p>';
-                return;
-            }
+            try {
+                const res = await fetch('/api/get-events');
+                const events = await res.json();
 
-            eventsGrid.innerHTML = events.map(event => {
-                const eventDate = new Date(event.date);
-                const dateStr = eventDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                if (events.length === 0) {
+                    eventsGrid.innerHTML = '<p class="empty-state" style="grid-column: 1/-1;">Belum ada event.</p>';
+                    return;
+                }
 
-                // Debug log to check event data
-                console.log('Event:', event.title, 'Category:', event.category);
+                eventsGrid.innerHTML = events.map(event => {
+                    const eventDate = new Date(event.date);
+                    const dateStr = eventDate.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
 
-                return `
-                <div class="event-card" data-category="${event.category}">
-                    <div class="event-image">
-                        <img src="${event.imageUrl}" alt="${event.title}" onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'250\\' viewBox=\\'0 0 400 250\\'><rect width=\\'400\\' height=\\'250\\' fill=\\'%23f0f0f0\\'/><text x=\\'200\\' y=\\'125\\' text-anchor=\\'middle\\' fill=\\'%23666\\' font-size=\\'16\\'>${event.title}</text></svg>'">
-                        <div class="event-date-badge">${dateStr}</div>
-                    </div>
-                    <div class="event-content">
-                        <h3>${event.title}</h3>
-                        <div class="event-meta">
-                            <span>📍 ${event.location}</span>
-                            <span>🕐 ${event.time}</span>
+                    return `
+                    <div class="event-card" data-category="${event.category || ''}">
+                        <div class="event-image">
+                            ${event.image_url ? `<img src="${event.image_url}" alt="${event.title}">` : ''}
+                            <div class="event-date-badge">${dateStr}</div>
                         </div>
-                        <p>${event.description}</p>
+                        <div class="event-content">
+                            <h3>${event.title}</h3>
+                            <div class="event-meta">
+                                <span>📍 ${event.location || ''}</span>
+                                <span>🕐 ${event.time || ''}</span>
+                            </div>
+                            <p>${event.description || ''}</p>
+                        </div>
                     </div>
-                </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error('Error loading events:', err);
+                eventsGrid.innerHTML = '<p class="empty-state">Gagal memuat event.</p>';
+            }
         }
+
 
 
         function filterEvents(category) {
