@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - PPIT</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #8B1538;
+            --secondary-red: #A41E4A;
+            --gold: #FFD700;
+            --dark-gold: #FFA500;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --sidebar-width: 280px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #f5f6fa;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-red));
+        }
+
+        .login-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-red));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .login-box h2 {
+            color: var(--primary-red);
+            margin-bottom: 2rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-red));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139,21,56,0.3);
+        }
+
+        .login-error {
+            color: #dc3545;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Admin Dashboard */
+        .admin-dashboard {
+            display: none;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-red));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 2rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        .menu-item:hover {
+            background: var(--bg-light);
+            color: var(--primary-red);
+            padding-left: 2.5rem;
+        }
+
+        .menu-item.active {
+            background: var(--bg-light);
+            color: var(--primary-red);
+            border-left: 4px solid var(--primary-red);
+        }
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .top-bar h1 {
+            color: var(--primary-red);
+            font-size: 1.8rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--secondary-red);
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.events {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .stat-icon.posts {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .stat-icon.members {
+            background: rgba(155, 89, 182, 0.1);
+            color: #9b59b6;
+        }
+
+        .stat-icon.gallery {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+        }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            color: var(--primary-red);
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-info p {
+            color: var(--text-light);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .section-header h2 {
+            color: var(--primary-red);
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-red));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139,21,56,0.3);
+        }
+
+        /* Form Styles */
+        .admin-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: var(--bg-light);
+            border-radius: 10px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .admin-form input,
+        .admin-form textarea,
+        .admin-form select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .admin-form input:focus,
+        .admin-form textarea:focus,
+        .admin-form select:focus {
+            outline: none;
+            border-color: var(--primary-red);
+        }
+
+        .admin-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-primary {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-red);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: var(--text-dark);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #ccc;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th {
+            background: var(--bg-light);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .data-table tr:hover {
+            background: var(--bg-light);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2980b9;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 1rem;
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--primary-red);
+            background: #fff;
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(139,21,56,0.1);
+        }
+
+        .file-upload-info {
+            margin-top: 0.5rem;
+        }
+
+        .file-upload-info small {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        /* Image preview styling */
+        #imagePreview {
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        #previewImg {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Progress bar styling */
+        #uploadProgress {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        #progressBar {
+            background: linear-gradient(90deg, var(--primary-red), var(--secondary-red));
+            height: 6px;
+            border-radius: 3px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        #uploadStatus {
+            display: block;
+            margin-top: 0.5rem;
+            color: var(--primary-red);
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #2ecc71;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo">PPI</div>
+            <h2>Admin Dashboard</h2>
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">Login</button>
+
+                <a href="/mainpage" class="main-page-btn">
+                    <i class="fas fa-home"></i>
+                    Kembali ke Halaman Utama
+                </a>
+                <div class="login-error" id="loginError">Username atau password salah!</div>
+            </form>
+        
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-dashboard" id="adminDashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">PPI</div>
+                <h3>Admin Panel</h3>
+            </div>
+            <nav class="sidebar-menu">
+                <button class="menu-item active" onclick="showSection('dashboard')">
+                    <span class="menu-icon">📊</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="menu-item" onclick="showSection('events')">
+                    <span class="menu-icon">📅</span>
+                    <span>Kelola Event</span>
+                </button>
+                <button class="menu-item" onclick="showSection('forum')">
+                    <span class="menu-icon">💬</span>
+                    <span>Kelola Forum</span>
+                </button>
+                <button class="menu-item" onclick="showSection('gallery')">
+                    <span class="menu-icon">🖼️</span>
+                    <span>Kelola Galeri</span>
+                </button>
+                <button class="menu-item" onclick="showSection('members')">
+                    <span class="menu-icon">👥</span>
+                    <span>Data Anggota</span>
+                </button>
+                <button class="menu-item" onclick="showSection('messages')">
+                    <span class="menu-icon">✉️</span>
+                    <span>Pesan Kontak</span>
+                </button>
+                <button class="menu-item" onclick="showSection('settings')">
+                    <span class="menu-icon">⚙️</span>
+                    <span>Pengaturan</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 id="pageTitle">Dashboard</h1>
+                <div class="user-info">
+                    <span>Welcome, <strong id="adminName">Admin</strong></span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Data berhasil disimpan!</span>
+            </div>
+
+            <!-- Dashboard Section -->
+            <section class="content-section active" id="dashboardSection">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon events">📅</div>
+                        <div class="stat-info">
+                            <h3 id="totalEvents">0</h3>
+                            <p>Total Events</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon posts">💬</div>
+                        <div class="stat-info">
+                            <h3 id="totalPosts">0</h3>
+                            <p>Forum Posts</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon members">👥</div>
+                        <div class="stat-info">
+                            <h3 id="totalMembers">0</h3>
+                            <p>Anggota Terdaftar</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gallery">🖼️</div>
+                        <div class="stat-info">
+                            <h3 id="totalGallery">0</h3>
+                            <p>Foto Galeri</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div class="content-section active" style="display: block;">
+                        <h3>Event Terbaru</h3>
+                        <div id="recentEvents">
+                            <p class="empty-state">Belum ada event</p>
+                        </div>
+                    </div>
+                    <div class="content-section active" style="display: block;">
+                        <h3>Post Forum Terbaru</h3>
+                        <div id="recentPosts">
+                            <p class="empty-state">Belum ada post</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Section -->
+            <section class="content-section" id="eventsSection">
+                <div class="section-header">
+                    <h2>Kelola Event</h2>
+                    <button class="add-btn" onclick="showEventForm()">
+                        <i class="fas fa-plus"></i>
+                        Tambah Event
+                    </button>
+                </div>
+
+                <form class="admin-form" id="eventForm" style="display: none;" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Nama Event</label>
+                        <input type="text" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal</label>
+                        <input type="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Waktu</label>
+                        <input type="time" name="time" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Lokasi</label>
+                        <input type="text" name="location" required>
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label>Gambar Event</label>
+                        <input type="file" name="eventImage" accept="image/*" required id="eventImageInput">
+                        <div class="file-upload-info">
+                            <small>Format yang didukung: PNG, JPG, JPEG, GIF, WEBP (Max: 16MB)</small>
+                        </div>
+                        <!-- Preview area -->
+                        <div id="imagePreview" style="margin-top: 1rem; display: none;">
+                            <img id="previewImg" style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid #ddd;">
+                        </div>
+                        <!-- Loading indicator -->
+                        <div id="uploadProgress" style="display: none; margin-top: 1rem;">
+                            <div style="background: #f0f0f0; border-radius: 10px; overflow: hidden;">
+                                <div id="progressBar" style="background: var(--primary-red); height: 20px; width: 0%; transition: width 0.3s; border-radius: 10px;"></div>
+                            </div>
+                            <small id="uploadStatus">Uploading...</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select name="category" required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="upcoming">Mendatang</option>
+                            <option value="ongoing">Berlangsung</option>
+                            <option value="past">Selesai</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Deskripsi</label>
+                        <textarea name="description" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="hideEventForm()">Batal</button>
+                        <button type="submit" class="btn-primary" id="saveEventBtn">Simpan Event</button>
+                    </div>
+                </form>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nama Event</th>
+                            <th>Tanggal</th>
+                            <th>Lokasi</th>
+                            <th>Kategori</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eventsTableBody">
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                <div class="empty-state-icon">📅</div>
+                                <p>Belum ada event. Klik tombol "Tambah Event" untuk memulai.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Forum Section -->
+            <section class="content-section" id="forumSection">
+                <div class="section-header">
+                    <h2>Kelola Forum Posts</h2>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Topik</th>
+                            <th>Konten</th>
+                            <th>Waktu</th>
+                            <th>Likes</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="forumTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <div class="empty-state-icon">💬</div>
+                                <p>Belum ada post forum.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Gallery Section -->
+            <section class="content-section" id="gallerySection">
+                <div class="section-header">
+                    <h2>Kelola Galeri</h2>
+                    <button class="add-btn" onclick="showGalleryForm()">
+                        <i class="fas fa-plus"></i>
+                        Tambah Foto
+                    </button>
+                </div>
+
+                <form class="admin-form" id="galleryForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Judul Foto</label>
+                        <input type="text" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>URL Gambar</label>
+                        <input type="url" name="imageUrl" placeholder="https://..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tahun</label>
+                        <select name="year" required>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Deskripsi</label>
+                        <textarea name="description"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="hideGalleryForm()">Batal</button>
+                        <button type="submit" class="btn-primary">Simpan Foto</button>
+                    </div>
+                </form>
+
+                <div id="galleryGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <p class="empty-state" style="grid-column: 1/-1;">
+                        <span class="empty-state-icon">🖼️</span><br>
+                        Belum ada foto. Klik tombol "Tambah Foto" untuk memulai.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Members Section -->
+            <section class="content-section" id="membersSection">
+                <div class="section-header">
+                    <h2>Data Anggota</h2>
+                    <button class="add-btn" onclick="exportMembers()">
+                        <i class="fas fa-download"></i>
+                        Export Data
+                    </button>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Universitas</th>
+                            <th>Jurusan</th>
+                            <th>Tahun Masuk</th>
+                        </tr>
+                    </thead>
+                    <tbody id="membersTableBody">
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                <div class="empty-state-icon">👥</div>
+                                <p>Belum ada data anggota.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Messages Section -->
+            <section class="content-section" id="messagesSection">
+                <div class="section-header">
+                    <h2>Pesan Kontak</h2>
+                </div>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>Lokasi</th>
+                            <th>Pesan</th>
+                            <th>Tanggal</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messagesTableBody">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <div class="empty-state-icon">✉️</div>
+                                <p>Belum ada pesan masuk.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="content-section" id="settingsSection">
+                <div class="section-header">
+                    <h2>Pengaturan</h2>
+                </div>
+
+                <form class="admin-form" id="settingsForm">
+                    <div class="form-group full-width">
+                        <h3 style="margin-bottom: 1rem;">Informasi Website</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Kontak</label>
+                        <input type="email" name="contactEmail" value="contact@ppitiongkok.org">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp</label>
+                        <input type="text" name="whatsapp" value="+86 123 4567 8900">
+                    </div>
+                    <div class="form-group">
+                        <label>Instagram</label>
+                        <input type="text" name="instagram" value="@ppitiongkok">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook</label>
+                        <input type="text" name="facebook" value="PPIT Official">
+                    </div>
+                    <div class="form-group full-width">
+                        <h3 style="margin-bottom: 1rem; margin-top: 2rem;">Ganti Password Admin</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>Password Lama</label>
+                        <input type="password" name="oldPassword">
+                    </div>
+                    <div class="form-group">
+                        <label>Password Baru</label>
+                        <input type="password" name="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label>Konfirmasi Password Baru</label>
+                        <input type="password" name="confirmPassword">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Simpan Pengaturan</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Data Storage
+        const storage = {
+            // Initialize default data if not exists
+            init() {
+                if (!localStorage.getItem('ppit_events')) {
+                    localStorage.setItem('ppit_events', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('ppit_posts')) {
+                    localStorage.setItem('ppit_posts', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('ppit_gallery')) {
+                    localStorage.setItem('ppit_gallery', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('ppit_members')) {
+                    localStorage.setItem('ppit_members', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('ppit_messages')) {
+                    localStorage.setItem('ppit_messages', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('ppit_settings')) {
+                    localStorage.setItem('ppit_settings', JSON.stringify({
+                        contactEmail: 'contact@ppitiongkok.org',
+                        whatsapp: '+86 123 4567 8900',
+                        instagram: '@ppitiongkok',
+                        facebook: 'PPIT Official'
+                    }));
+                }
+            },
+
+            // Get data
+            get(key) {
+                return JSON.parse(localStorage.getItem(`ppit_${key}`) || '[]');
+            },
+
+            // Set data
+            set(key, data) {
+                localStorage.setItem(`ppit_${key}`, JSON.stringify(data));
+            },
+
+            // Add item
+            add(key, item) {
+                const data = this.get(key);
+                item.id = Date.now() + Math.random().toString(36).substr(2, 9);
+                item.createdAt = new Date().toISOString();
+                data.unshift(item);
+                this.set(key, data);
+                return item;
+            },
+
+            // Update item
+            update(key, id, updates) {
+                const data = this.get(key);
+                const index = data.findIndex(item => item.id === id);
+                if (index !== -1) {
+                    data[index] = { ...data[index], ...updates };
+                    this.set(key, data);
+                    return data[index];
+                }
+                return null;
+            },
+
+            // Delete item
+            delete(key, id) {
+                const data = this.get(key);
+                const filtered = data.filter(item => item.id !== id);
+                this.set(key, filtered);
+                return true;
+            }
+        };
+
+        // Initialize storage
+        storage.init();
+
+        // Authentication
+        let isLoggedIn = sessionStorage.getItem('ppit_admin_logged_in') === 'true';
+
+        function checkAuth() {
+            if (!isLoggedIn) {
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('adminDashboard').style.display = 'none';
+            } else {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadDashboard();
+            }
+        }
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const username = this.username.value;
+            const password = this.password.value;
+            const settings = JSON.parse(localStorage.getItem('ppit_settings'));
+            try {
+                const response = await fetch('/login/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+                if (!result.success) {
+                    console.log('Login failed:', result.message);
+                    document.getElementById('loginError').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('loginError').style.display = 'none';
+                    }, 3000);
+                } else {
+                    console.log('Login successful:', result);
+                    sessionStorage.setItem('ppit_admin_logged_in', 'true');
+                    isLoggedIn = true;
+                    checkAuth();
+                }
+
+            } catch(error) {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loginError').style.display = 'none';
+                }, 3000);
+            }
+            
+        });
+
+        // Logout
+        function logout() {
+            if (confirm('Yakin ingin logout?')) {
+                sessionStorage.removeItem('ppit_admin_logged_in');
+                isLoggedIn = false;
+                checkAuth();
+            }
+        }
+
+        // Show Section
+        function showSection(section) {
+            // Update menu
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.menu-item').classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.content-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.getElementById(section + 'Section').classList.add('active');
+
+            // Update page title
+            const titles = {
+                dashboard: 'Dashboard',
+                events: 'Kelola Event',
+                forum: 'Kelola Forum',
+                gallery: 'Kelola Galeri',
+                members: 'Data Anggota',
+                messages: 'Pesan Kontak',
+                settings: 'Pengaturan'
+            };
+            document.getElementById('pageTitle').textContent = titles[section];
+
+            // Load section data
+            switch(section) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'events':
+                    loadEvents();
+                    break;
+                case 'forum':
+                    loadForumPosts();
+                    break;
+                case 'gallery':
+                    loadGallery();
+                    break;
+                case 'members':
+                    loadMembers();
+                    break;
+                case 'messages':
+                    loadMessages();
+                    break;
+                case 'settings':
+                    loadSettings();
+                    break;
+            }
+        }
+
+        // Show Success Message
+        function showSuccess(message) {
+            const successMsg = document.getElementById('successMessage');
+            document.getElementById('successText').textContent = message;
+            successMsg.classList.add('show');
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 3000);
+        }
+
+        // Dashboard
+        function loadDashboard() {
+            // Update stats
+            document.getElementById('totalEvents').textContent = storage.get('events').length;
+            document.getElementById('totalPosts').textContent = storage.get('posts').length;
+            document.getElementById('totalMembers').textContent = storage.get('members').length;
+            document.getElementById('totalGallery').textContent = storage.get('gallery').length;
+
+            // Recent events
+            const events = storage.get('events').slice(0, 5);
+            const recentEventsDiv = document.getElementById('recentEvents');
+            if (events.length > 0) {
+                recentEventsDiv.innerHTML = events.map(event => `
+                    <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+                        <strong>${event.title}</strong><br>
+                        <small>${event.date} - ${event.location}</small>
+                    </div>
+                `).join('');
+            } else {
+                recentEventsDiv.innerHTML = '<p class="empty-state">Belum ada event</p>';
+            }
+
+            // Recent posts
+            const posts = storage.get('posts').slice(0, 5);
+            const recentPostsDiv = document.getElementById('recentPosts');
+            if (posts.length > 0) {
+                recentPostsDiv.innerHTML = posts.map(post => `
+                    <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+                        <strong>${post.username}</strong> - ${post.topic}<br>
+                        <small>${post.content.substring(0, 50)}...</small>
+                    </div>
+                `).join('');
+            } else {
+                recentPostsDiv.innerHTML = '<p class="empty-state">Belum ada post</p>';
+            }
+        }
+
+        document.getElementById('eventImageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    const img = document.getElementById('previewImg');
+                    img.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Events Management
+        function showEventForm() {
+            document.getElementById('eventForm').style.display = 'grid';
+        }
+
+        function hideEventForm() {
+            document.getElementById('eventForm').style.display = 'none';
+            document.getElementById('eventForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('uploadProgress').style.display = 'none';
+        }
+
+        document.getElementById('eventForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('saveEventBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
+            
+            try {
+                // First, upload the image
+                const fileInput = document.getElementById('eventImageInput');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    throw new Error('Please select an image file');
+                }
+                
+                // Show upload progress
+                document.getElementById('uploadProgress').style.display = 'block';
+                document.getElementById('uploadStatus').textContent = 'Uploading image...';
+                
+                // Create FormData for file upload
+                const uploadFormData = new FormData();
+                uploadFormData.append('eventImage', file);
+                
+                // Upload image
+                const uploadResponse = await fetch('/api/upload-event', {
+                    method: 'POST',
+                    body: uploadFormData
+                });
+                
+                const uploadResult = await uploadResponse.json();
+                
+                if (!uploadResponse.ok) {
+                    throw new Error(uploadResult.error || 'Upload failed');
+                }
+                
+                // Update progress
+                document.getElementById('uploadStatus').textContent = 'Saving event...';
+                
+                // Create event data with uploaded image URL
+                const formData = new FormData(this);
+                const event = {
+                    title: formData.get('title'),
+                    date: formData.get('date'),
+                    imageUrl: uploadResult.imageUrl, // Use uploaded image URL
+                    time: formData.get('time'),
+                    location: formData.get('location'),
+                    category: formData.get('category'),
+                    description: formData.get('description')
+                };
+
+                // Save event to localStorage
+                storage.add('events', event);
+                
+                // Hide progress and show success
+                document.getElementById('uploadProgress').style.display = 'none';
+                showSuccess('Event berhasil ditambahkan!');
+                hideEventForm();
+                loadEvents();
+                
+            } catch (error) {
+                document.getElementById('uploadProgress').style.display = 'none';
+                alert('Error: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+
+        function loadEvents() {
+            const events = storage.get('events');
+            const tbody = document.getElementById('eventsTableBody');
+
+            if (events.length > 0) {
+                tbody.innerHTML = events.map(event => `
+                    <tr>
+                        <td>${event.title}</td>
+                        <td>${new Date(event.date).toLocaleDateString('id-ID')}</td>
+                        <td>${event.location}</td>
+                        <td><span class="badge">${event.category}</span></td>
+                        <td>
+                            <div class="table-actions">
+                                <button class="btn-edit" onclick="editEvent('${event.id}')">Edit</button>
+                                <button class="btn-delete" onclick="deleteEvent('${event.id}')">Hapus</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <div class="empty-state-icon">📅</div>
+                            <p>Belum ada event. Klik tombol "Tambah Event" untuk memulai.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function deleteEvent(id) {
+            if (!confirm('Yakin ingin menghapus event ini? Gambar yang terkait juga akan dihapus.')) {
+                return;
+            }
+            
+            try {
+                // Get the event data first to get the image URL
+                const events = storage.get('events');
+                const eventToDelete = events.find(event => event.id === id);
+                
+                if (!eventToDelete) {
+                    throw new Error('Event tidak ditemukan');
+                }
+                
+                // Call backend to delete the image file
+                const response = await fetch(`/delete-event/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        imageUrl: eventToDelete.imageUrl 
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    // Remove from localStorage after successful file deletion
+                    storage.delete('events', id);
+                    showSuccess('Event dan gambar berhasil dihapus!');
+                    loadEvents();
+                    console.log('Backend response:', result.message);
+                } else {
+                    // Even if file deletion fails, still remove from localStorage
+                    storage.delete('events', id);
+                    showSuccess('Event dihapus (ada masalah dengan penghapusan file)');
+                    loadEvents();
+                    console.warn('File deletion issue:', result.error);
+                }
+                
+            } catch (error) {
+                console.error('Error deleting event:', error);
+                
+                // Fallback: delete from localStorage even if backend call fails
+                storage.delete('events', id);
+                showSuccess('Event dihapus dari daftar (mungkin ada masalah dengan penghapusan file)');
+                loadEvents();
+            }
+        }
+
+        // Forum Management
+        function loadForumPosts() {
+            const posts = storage.get('posts');
+            const tbody = document.getElementById('forumTableBody');
+
+            if (posts.length > 0) {
+                tbody.innerHTML = posts.map(post => `
+                    <tr>
+                        <td>${post.username}</td>
+                        <td>${post.topic}</td>
+                        <td>${post.content.substring(0, 100)}...</td>
+                        <td>${new Date(post.timestamp).toLocaleString('id-ID')}</td>
+                        <td>${post.likes || 0}</td>
+                        <td>
+                            <button class="btn-delete" onclick="deletePost('${post.id}')">Hapus</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-state-icon">💬</div>
+                            <p>Belum ada post forum.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function deletePost(id) {
+            if (confirm('Yakin ingin menghapus post ini?')) {
+                storage.delete('posts', id);
+                showSuccess('Post berhasil dihapus!');
+                loadForumPosts();
+            }
+        }
+
+        // Gallery Management
+        function showGalleryForm() {
+            document.getElementById('galleryForm').style.display = 'grid';
+        }
+
+        function hideGalleryForm() {
+            document.getElementById('galleryForm').style.display = 'none';
+            document.getElementById('galleryForm').reset();
+        }
+
+        document.getElementById('galleryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const photo = {
+                title: formData.get('title'),
+                imageUrl: formData.get('imageUrl'),
+                year: formData.get('year'),
+                description: formData.get('description')
+            };
+
+            storage.add('gallery', photo);
+            showSuccess('Foto berhasil ditambahkan!');
+            hideGalleryForm();
+            loadGallery();
+        });
+
+        function loadGallery() {
+            const photos = storage.get('gallery');
+            const grid = document.getElementById('galleryGrid');
+
+            if (photos.length > 0) {
+                grid.innerHTML = photos.map(photo => `
+                    <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <img src="${photo.imageUrl}" alt="${photo.title}" style="width: 100%; height: 200px; object-fit: cover;">
+                        <div style="padding: 1rem;">
+                            <h4>${photo.title}</h4>
+                            <p style="color: #666; font-size: 0.9rem;">${photo.year}</p>
+                            <button class="btn-delete" onclick="deletePhoto('${photo.id}')" style="margin-top: 0.5rem;">Hapus</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                grid.innerHTML = `
+                    <p class="empty-state" style="grid-column: 1/-1;">
+                        <span class="empty-state-icon">🖼️</span><br>
+                        Belum ada foto. Klik tombol "Tambah Foto" untuk memulai.
+                    </p>
+                `;
+            }
+        }
+
+        function deletePhoto(id) {
+            if (confirm('Yakin ingin menghapus foto ini?')) {
+                storage.delete('gallery', id);
+                showSuccess('Foto berhasil dihapus!');
+                loadGallery();
+            }
+        }
+
+        // Members Management
+        function loadMembers() {
+            const members = storage.get('members');
+            const tbody = document.getElementById('membersTableBody');
+
+            if (members.length > 0) {
+                tbody.innerHTML = members.map(member => `
+                    <tr>
+                        <td>${member.name}</td>
+                        <td>${member.email}</td>
+                        <td>${member.university}</td>
+                        <td>${member.major}</td>
+                        <td>${member.year}</td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <div class="empty-state-icon">👥</div>
+                            <p>Belum ada data anggota.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function exportMembers() {
+            const members = storage.get('members');
+            if (members.length === 0) {
+                alert('Belum ada data anggota untuk di-export!');
+                return;
+            }
+
+            // Create CSV content
+            const headers = ['Nama', 'Email', 'Universitas', 'Jurusan', 'Tahun Masuk'];
+            const rows = members.map(m => [m.name, m.email, m.university, m.major, m.year]);
+            const csvContent = [headers, ...rows].map(row => row.join(',')).join('\n');
+
+            // Download CSV
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `anggota_ppit_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            showSuccess('Data anggota berhasil di-export!');
+        }
+
+        // Messages Management
+        function loadMessages() {
+            const messages = storage.get('messages');
+            const tbody = document.getElementById('messagesTableBody');
+
+            if (messages.length > 0) {
+                tbody.innerHTML = messages.map(msg => `
+                    <tr>
+                        <td>${msg.name}</td>
+                        <td>${msg.email}</td>
+                        <td>${msg.location}</td>
+                        <td>${msg.message.substring(0, 100)}...</td>
+                        <td>${new Date(msg.timestamp).toLocaleDateString('id-ID')}</td>
+                        <td><span class="badge">Baru</span></td>
+                    </tr>
+                `).join('');
+            } else {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-state-icon">✉️</div>
+                            <p>Belum ada pesan masuk.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Settings Management
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('ppit_settings'));
+            const form = document.getElementById('settingsForm');
+            form.contactEmail.value = settings.contactEmail;
+            form.whatsapp.value = settings.whatsapp;
+            form.instagram.value = settings.instagram;
+            form.facebook.value = settings.facebook;
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            const oldPassword = formData.get('oldPassword');
+            const newPassword = formData.get('newPassword');
+            const confirmPassword = formData.get('confirmPassword');
+
+            const response = await fetch('/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ oldPassword, newPassword, confirmPassword })
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                alert(result.error);
+            } else {
+                alert('Password berhasil diubah!');
+                document.querySelector('input[name="oldPassword"]').value = "";
+                document.querySelector('input[name="newPassword"]').value = "";
+                document.querySelector('input[name="confirmPassword"]').value = "";
+
+            }
+
+            
+        });
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>

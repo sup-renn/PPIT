@@ -1,0 +1,8 @@
+.env
+env/
+__pycache__/
+static/
+.DS_Store
+node_modules/
+npm-debug.log
+package-lock.json

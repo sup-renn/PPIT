@@ -1,0 +1,31 @@
+{
+  "name": "ppit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edwardsean/PPIT-TIONGKOK.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/edwardsean/PPIT-TIONGKOK/issues"
+  },
+  "homepage": "https://github.com/edwardsean/PPIT-TIONGKOK#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.53.0",
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "formidable": "^3.5.1",
+    "multer": "^2.0.1",
+    "pg": "^8.16.3"
+  }
+}
