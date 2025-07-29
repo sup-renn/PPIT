@@ -6,6 +6,14 @@ import fs from 'fs/promises';
 import supabase from './lib/supabase-client.js';
 import formidable from 'formidable';
 
+// Disable Vercel's default body parser for file uploads
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
+
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -163,6 +171,18 @@ app.post('/change-password', (req, res) => {
   res.json({ message: 'Password berhasil diubah' });
 });
 
+app.get('/mainpage', async (req, res) => {
+  try {
+    const filePath = join(__dirname, 'public/mainpage.html');
+    const content = await fs.readFile(filePath, 'utf-8');
+    res.setHeader('Content-Type', 'text/html');
+    res.send(content);
+  } catch (err) {
+    console.error('Error serving main page:', err);
+    res.status(500).send('Could not load main page');
+  }
+});
+
 // Catch-all route for SPA
 app.get('*', async (req, res) => {
   try {
@@ -177,8 +197,8 @@ app.get('*', async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on port ${PORT}`);
+// });
 
 export default app;
