@@ -88,6 +88,9 @@ app.post('/api/upload-event', (req, res) => {
       const uploadedFile = fileArray[0];
       
 
+
+
+
       // ✅ More debug logs before Supabase call
       console.log("📌 Uploaded file:", uploadedFile.originalFilename);
       console.log("📌 File size:", uploadedFile.size);
@@ -113,7 +116,15 @@ app.post('/api/upload-event', (req, res) => {
     }
 
 
-      const publicUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/event-images/${fileName}`;
+      const { data: publicData } = supabase.storage
+        .from('event-images')
+        .getPublicUrl(fileName);
+
+      const publicUrl = publicData.publicUrl;
+
+
+
+
 
       const insertResult = await supabase
         .from('event_images')
