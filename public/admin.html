@@ -348,6 +348,54 @@
             box-shadow: 0 5px 15px rgba(139,21,56,0.3);
         }
 
+        .event-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* two columns */
+            gap: 1rem;
+            max-width: 800px;
+            margin-top: 1rem;
+        }
+
+        .event-form label {
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: block;
+            grid-column: span 2; /* label takes full row */
+        }
+
+        .event-form input,
+        .event-form textarea,
+        .event-form button {
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        .event-form textarea {
+            grid-column: span 2; /* make description full width */
+            min-height: 80px;
+        }
+
+        .event-form button {
+            grid-column: span 2;
+            background: #8b1538;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            padding: 0.75rem;
+            transition: background 0.3s ease;
+        }
+
+        .event-form button:hover {
+            background: #a91e4d;
+        }
+
+
+
+
+
         /* Form Styles */
         .admin-form {
             display: grid;
