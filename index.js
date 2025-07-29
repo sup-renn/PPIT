@@ -64,7 +64,8 @@ app.post('/login/verify', (req, res) => {
 
 // Upload event image
 app.post('/api/upload-event', (req, res) => {
-  const form = new formidable.IncomingForm();
+  const form = formidable({ multiples: false }); // create form instance
+  form.parse(req, async (err, fields, files) => {
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
@@ -117,6 +118,7 @@ app.post('/api/upload-event', (req, res) => {
       console.error("Upload processing error:", uploadError);
       res.status(500).json({ error: 'Failed to process upload' });
     }
+    });
   });
 });
 

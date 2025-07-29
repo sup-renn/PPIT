@@ -10,16 +10,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edwardsean/PPIT-TIONGKOK.git"
+    "url": "git+https://github.com/sup-renn/PPIT.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/edwardsean/PPIT-TIONGKOK/issues"
+    "url": "https://github.com/sup-renn/PPIT/issues"
   },
-  "homepage": "https://github.com/edwardsean/PPIT-TIONGKOK#readme",
+  "homepage": "https://github.com/sup-renn/PPIT#readme",
   "dependencies": {
     "@supabase/supabase-js": "^2.53.0",
     "body-parser": "^2.2.0",
