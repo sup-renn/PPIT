@@ -349,52 +349,35 @@
         }
         /*Kelola Event PART*/
         .event-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* two columns */
-            gap: 1rem;
-            max-width: 800px;
-            margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-width: 500px;
         }
 
         .event-form label {
-            font-weight: 600;
-            margin-top: 0.5rem;
-            display: block;
-            grid-column: span 2; /* label takes full row */
+        font-weight: 600;
         }
 
         .event-form input,
+        .event-form select,
         .event-form textarea,
         .event-form button {
-            padding: 0.5rem;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            width: 100%;
-        }
-
-        .event-form textarea {
-            grid-column: span 2; /* make description full width */
-            min-height: 80px;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 6px;
         }
 
         .event-form button {
-            grid-column: span 2;
-            background: #8b1538;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            padding: 0.75rem;
-            transition: background 0.3s ease;
+        background: #8b1538;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
         }
 
         .event-form button:hover {
-            background: #a91e4d;
+        background: #a91e4d;
         }
-
-
-
-
 
         /* Form Styles */
         .admin-form {
@@ -857,49 +840,38 @@
                 </div>
 
                 <!-- ✅ Added class="event-form" and removed inline style -->
-                <form id="eventForm" class="event-form" enctype="multipart/form-data" method="post" style="display:none;">
-                    <label>Nama Event</label>
-                    <input type="text" name="title" required>
+            <form id="eventForm" class="event-form" enctype="multipart/form-data" method="post" style="display:none;">
+                <label>Nama Event</label>
+                <input type="text" name="title" required>
 
-                    <label>Tanggal</label>
-                    <input type="date" name="date" required>
+                <label>Tanggal</label>
+                <input type="date" name="date" required>
 
-                    <label>Waktu</label>
-                    <input type="time" name="time">
+                <label>Waktu</label>
+                <input type="time" name="time">
 
-                    <label>Lokasi</label>
-                    <input type="text" name="location">
+                <label>Lokasi</label>
+                <input type="text" name="location">
 
-                    <label>Kategori</label>
-                    <select name="category" required>
-                        <option value="">Pilih Kategori</option>
-                        <option value="upcoming">Mendatang</option>
-                        <option value="ongoing">Berlangsung</option>
-                        <option value="past">Selesai</option>
-                    </select>
+                <label>Kategori</label>
+                <select name="category" required>
+                    <option value="">Pilih Kategori</option>
+                    <option value="upcoming">Mendatang</option>
+                    <option value="ongoing">Berlangsung</option>
+                    <option value="past">Selesai</option>
+                </select>
 
-                    <label>Deskripsi</label>
-                    <textarea name="description"></textarea>
+                <label>Deskripsi</label>
+                <textarea name="description"></textarea>
 
-                    <label>Gambar Event</label>
-                    <input type="file" name="eventImage" accept="image/*" required id="eventImageInput">
-                    <div class="file-upload-info">
-                        <small>Format: PNG, JPG, JPEG, GIF, WEBP (Max: 16MB)</small>
-                    </div>
-                    <div id="imagePreview" style="margin-top: 1rem; display: none;">
-                        <img id="previewImg" style="max-width: 200px; max-height: 150px; border-radius: 8px; border: 1px solid #ddd;">
-                    </div>
-                    <div id="uploadProgress" style="display: none; margin-top: 1rem;">
-                        <div style="background: #f0f0f0; border-radius: 10px; overflow: hidden;">
-                            <div id="progressBar" style="background: var(--primary-red); height: 20px; width: 0%; transition: width 0.3s; border-radius: 10px;"></div>
-                        </div>
-                        <small id="uploadStatus">Uploading...</small>
-                    </div>
+                <label>Gambar Event</label>
+                <input type="file" name="eventImage" accept="image/*" required id="eventImageInput">
 
-                    <!-- ✅ Clear button layout -->
-                    <button type="button" class="btn-secondary" onclick="hideEventForm()">Batal</button>
-                    <button type="submit" class="btn-primary" id="saveEventBtn">Upload Event</button>
-                </form>
+                <!-- ✅ Submit and Cancel buttons inside the form -->
+                <button type="button" class="btn-secondary" onclick="hideEventForm()">Batal</button>
+                <button type="submit" class="btn-primary" id="saveEventBtn">Upload Event</button>
+            </form>
+
 
                 <hr style="margin: 2rem 0;">
 
