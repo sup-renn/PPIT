@@ -40,7 +40,7 @@ app.get('/', async (req, res) => {
 // Login routes
 app.get('/login', async (req, res) => {
   try {
-    const filePath = join(__dirname, 'public/index.html');
+    const filePath = join(__dirname, 'public/admin.html');
     const content = await fs.readFile(filePath, 'utf-8');
     res.setHeader('Content-Type', 'text/html');
     res.send(content);
@@ -215,7 +215,7 @@ app.get('/mainpage', async (req, res) => {
 // Catch-all route for SPA
 app.get(/.*/, async (req, res) => {
   try {
-    const filePath = join(__dirname, 'public/index.html');
+    const filePath = join(__dirname, 'public/admin.html');
     const content = await fs.readFile(filePath, 'utf-8');
     res.setHeader('Content-Type', 'text/html');
     res.send(content);
