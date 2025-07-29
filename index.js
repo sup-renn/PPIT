@@ -64,8 +64,13 @@ app.post('/login/verify', (req, res) => {
 
 // Upload event image
 app.post('/api/upload-event', (req, res) => {
+
+  // ✅ Debug logging should go here at the very start
+  console.log("📌 Upload route hit");
+  console.log("📌 SUPABASE_URL:", process.env.SUPABASE_URL);
+  console.log("📌 SUPABASE_SERVICE_ROLE_KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "✅ Loaded" : "❌ Missing");
+
   const form = formidable({ multiples: false }); // create form instance
-  form.parse(req, async (err, fields, files) => {
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
@@ -82,6 +87,12 @@ app.post('/api/upload-event', (req, res) => {
       const fileArray = Array.isArray(file) ? file : [file];
       const uploadedFile = fileArray[0];
       
+      
+      // ✅ More debug logs before Supabase call
+      console.log("📌 Uploaded file:", uploadedFile.originalFilename);
+      console.log("📌 File size:", uploadedFile.size);
+
+
       const fileBuffer = await fs.readFile(uploadedFile.filepath);
       const fileExt = uploadedFile.originalFilename?.split('.').pop() || 'jpg';
       const fileName = `event-${Date.now()}.${fileExt}`;
@@ -100,14 +111,12 @@ app.post('/api/upload-event', (req, res) => {
 
       const publicUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/event-images/${fileName}`;
 
-      // Optional: Insert into DB
       const insertResult = await supabase
         .from('event_images')
         .insert([{ file_name: fileName, url: publicUrl }]);
 
       if (insertResult.error) {
         console.error("DB insert error:", insertResult.error);
-        // Don't fail the request if DB insert fails, we still have the file uploaded
       }
 
       res.status(200).json({
@@ -118,9 +127,9 @@ app.post('/api/upload-event', (req, res) => {
       console.error("Upload processing error:", uploadError);
       res.status(500).json({ error: 'Failed to process upload' });
     }
-    });
   });
 });
+
 
 // Delete event
 app.delete('/delete-event/:id', async (req, res) => {
