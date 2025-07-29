@@ -184,7 +184,7 @@ app.get('/mainpage', async (req, res) => {
 });
 
 // Catch-all route for SPA
-app.get('/.*/', async (req, res) => {
+app.get(/.*/, async (req, res) => {
   try {
     const filePath = join(__dirname, 'public/index.html');
     const content = await fs.readFile(filePath, 'utf-8');
