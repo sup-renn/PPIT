@@ -87,7 +87,7 @@ app.post('/api/upload-event', (req, res) => {
       const fileArray = Array.isArray(file) ? file : [file];
       const uploadedFile = fileArray[0];
       
-      
+
       // ✅ More debug logs before Supabase call
       console.log("📌 Uploaded file:", uploadedFile.originalFilename);
       console.log("📌 File size:", uploadedFile.size);
@@ -106,8 +106,12 @@ app.post('/api/upload-event', (req, res) => {
 
       if (error) {
         console.error("Upload error:", error);
-        return res.status(500).json({ error: 'Upload to Supabase Storage failed' });
-      }
+        return res.status(500).json({ 
+        error: 'Upload to Supabase Storage failed', 
+        details: error.message 
+      });
+    }
+
 
       const publicUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/event-images/${fileName}`;
 
