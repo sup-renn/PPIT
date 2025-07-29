@@ -27,7 +27,7 @@ app.use(express.static('public'));
 // Serve main page
 app.get('/', async (req, res) => {
   try {
-    const filePath = join(__dirname, 'public/index.html');
+    const filePath = join(__dirname, 'public/mainpage.html');
     const content = await fs.readFile(filePath, 'utf-8');
     res.setHeader('Content-Type', 'text/html');
     res.send(content);
@@ -215,7 +215,7 @@ app.get('/mainpage', async (req, res) => {
 // Catch-all route for SPA
 app.get(/.*/, async (req, res) => {
   try {
-    const filePath = join(__dirname, 'public/mainpage.html');
+    const filePath = join(__dirname, 'public/index.html');
     const content = await fs.readFile(filePath, 'utf-8');
     res.setHeader('Content-Type', 'text/html');
     res.send(content);
