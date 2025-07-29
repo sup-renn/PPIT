@@ -118,7 +118,7 @@ app.post('/api/upload-event', (req, res) => {
 
       const { data: publicData } = supabase.storage
         .from('event-images')
-        .getPublicUrl(fileName);
+        .getPublicUrl(`event-images/${fileName}`);
 
       const publicUrl = publicData.publicUrl;
 
