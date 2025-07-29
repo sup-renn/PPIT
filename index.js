@@ -122,6 +122,9 @@ app.post('/api/upload-event', (req, res) => {
 
       const publicUrl = publicData.publicUrl;
 
+      console.log("📌 Public URL generated:", publicUrl);
+
+
 
 
 
