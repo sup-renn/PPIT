@@ -730,6 +730,18 @@
                 <span id="successText">Data berhasil disimpan!</span>
             </div>
 
+
+            <!-- Event Modal -->
+        <div id="eventModal" class="modal">
+            <div class="modal-content" id="eventModalContent">
+                <!-- The event details and image will be inserted here by openEventModal() -->
+            </div>
+            <button class="modal-close" onclick="closeEventModal()">×</button>
+        </div>
+
+
+
+
             <!-- Dashboard Section -->
             <section class="content-section active" id="dashboardSection">
                 <div class="stats-grid">
@@ -1256,11 +1268,13 @@
             const recentEventsDiv = document.getElementById('recentEvents');
             if (events.length > 0) {
                 recentEventsDiv.innerHTML = events.map(event => `
-                    <div style="padding: 1rem; border-bottom: 1px solid #eee;">
-                        <strong>${event.title}</strong><br>
-                        <small>${event.date} - ${event.location}</small>
-                    </div>
+                <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    ${event.imageUrl ? `<img src="${event.imageUrl}" style="max-width:100px; border-radius:6px; display:block; margin-bottom:8px;">` : ''}
+                    <strong>${event.title}</strong><br>
+                    <small>${event.date} - ${event.location}</small>
+                </div>
                 `).join('');
+
             } else {
                 recentEventsDiv.innerHTML = '<p class="empty-state">Belum ada event</p>';
             }
@@ -1382,30 +1396,59 @@
 
             if (events.length > 0) {
                 tbody.innerHTML = events.map(event => `
-                    <tr>
-                        <td>${event.title}</td>
-                        <td>${new Date(event.date).toLocaleDateString('id-ID')}</td>
-                        <td>${event.location}</td>
-                        <td><span class="badge">${event.category}</span></td>
-                        <td>
-                            <div class="table-actions">
-                                <button class="btn-edit" onclick="editEvent('${event.id}')">Edit</button>
-                                <button class="btn-delete" onclick="deleteEvent('${event.id}')">Hapus</button>
-                            </div>
-                        </td>
-                    </tr>
+                <tr onclick="openEventModal('${event.id}')">
+                    <td>
+                    ${event.imageUrl ? `<img src="${event.imageUrl}" style="max-height:50px; border-radius:4px; margin-right:8px;">` : ''}
+                    ${event.title}
+                    </td>
+                    <td>${new Date(event.date).toLocaleDateString('id-ID')}</td>
+                    <td>${event.location}</td>
+                    <td><span class="badge">${event.category}</span></td>
+                    <td>
+                    <div class="table-actions">
+                        <button class="btn-edit" onclick="editEvent('${event.id}'); event.stopPropagation();">Edit</button>
+                        <button class="btn-delete" onclick="deleteEvent('${event.id}'); event.stopPropagation();">Hapus</button>
+                    </div>
+                    </td>
+                </tr>
                 `).join('');
+
             } else {
                 tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="empty-state">
-                            <div class="empty-state-icon">📅</div>
-                            <p>Belum ada event. Klik tombol "Tambah Event" untuk memulai.</p>
-                        </td>
-                    </tr>
+                <tr>
+                    <td colspan="5" class="empty-state">
+                    <div class="empty-state-icon">📅</div>
+                    <p>Belum ada event. Klik tombol "Tambah Event" untuk memulai.</p>
+                    </td>
+                </tr>
                 `;
             }
         }
+
+        //changes here, for the modal picture to pop up
+        function openEventModal(eventId) {
+            const events = storage.get('events');
+            const event = events.find(ev => ev.id === eventId);
+            if (!event) return;
+
+            const modal = document.getElementById('eventModal');
+            const modalContent = document.getElementById('eventModalContent');
+
+            modalContent.innerHTML = `
+                ${event.imageUrl ? `<img src="${event.imageUrl}" alt="${event.title}" style="max-width:100%; border-radius:8px; margin-bottom:1rem;">` : ''}
+                <h2>${event.title}</h2>
+                <p><strong>Tanggal:</strong> ${event.date}</p>
+                <p><strong>Lokasi:</strong> ${event.location}</p>
+                <p>${event.description}</p>
+            `;
+
+            modal.classList.add('active');
+            }
+
+            function closeEventModal() {
+            document.getElementById('eventModal').classList.remove('active');
+        }
+
 
         async function deleteEvent(id) {
             if (!confirm('Yakin ingin menghapus event ini? Gambar yang terkait juga akan dihapus.')) {
