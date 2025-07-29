@@ -1346,11 +1346,13 @@
         });
 
         async function loadEvents() {
+            console.log("📌 loadEvents() triggered");
             const tbody = document.getElementById('eventsTableBody');
 
             try {
                 const res = await fetch('/api/get-events');
                 const events = await res.json();
+                console.log("📌 Events fetched:", events);
 
                 if (events.length > 0) {
                     tbody.innerHTML = events.map(event => `
