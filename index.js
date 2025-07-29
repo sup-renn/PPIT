@@ -63,14 +63,100 @@ app.post('/login/verify', (req, res) => {
 });
 
 // Upload event image
+// app.post('/api/upload-event', (req, res) => {
+
+//   // ✅ Debug logging should go here at the very start
+//   console.log("📌 Upload route hit");
+//   console.log("📌 SUPABASE_URL:", process.env.SUPABASE_URL);
+//   console.log("📌 SUPABASE_SERVICE_ROLE_KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "✅ Loaded" : "❌ Missing");
+
+//   const form = formidable({ multiples: false }); // create form instance
+
+//   form.parse(req, async (err, fields, files) => {
+//     if (err) {
+//       console.error("Form parse error:", err);
+//       return res.status(500).json({ error: 'File parsing failed' });
+//     }
+
+//     const file = files.eventImage;
+//     if (!file) {
+//       return res.status(400).json({ error: 'No file uploaded' });
+//     }
+
+//     try {
+//       const fileArray = Array.isArray(file) ? file : [file];
+//       const uploadedFile = fileArray[0];
+      
+
+
+
+
+//       // ✅ More debug logs before Supabase call
+//       console.log("📌 Uploaded file:", uploadedFile.originalFilename);
+//       console.log("📌 File size:", uploadedFile.size);
+
+
+//       const fileBuffer = await fs.readFile(uploadedFile.filepath);
+//       const fileExt = uploadedFile.originalFilename?.split('.').pop() || 'jpg';
+//       const fileName = `event-${Date.now()}.${fileExt}`;
+
+//       const { data, error } = await supabase.storage
+//         .from('event-images')
+//         .upload(fileName, fileBuffer, {
+//           contentType: uploadedFile.mimetype,
+//           upsert: false,
+//         });
+
+//       if (error) {
+//         console.error("Upload error:", error);
+//         return res.status(500).json({ 
+//         error: 'Upload to Supabase Storage failed', 
+//         details: error.message 
+//       });
+//     }
+
+
+//       const { data: publicData } = supabase.storage
+//         .from('event-images')
+//         .getPublicUrl(fileName);
+
+//       const publicUrl = publicData.publicUrl;
+
+//       console.log("📌 Public URL generated:", publicUrl);
+
+
+
+
+
+
+//       const insertResult = await supabase
+//         .from('event_images')
+//         .insert([{ file_name: fileName, url: publicUrl }]);
+
+//       if (insertResult.error) {
+//         console.error("DB insert error:", insertResult.error);
+//       }
+
+//       res.status(200).json({
+//         message: 'Upload successful',
+//         imageUrl: publicUrl,
+//       });
+//     } catch (uploadError) {
+//       console.error("Upload processing error:", uploadError);
+//       res.status(500).json({ error: 'Failed to process upload' });
+//     }
+//   });
+// });
+
+
+// Upload event image + save event data
 app.post('/api/upload-event', (req, res) => {
 
-  // ✅ Debug logging should go here at the very start
   console.log("📌 Upload route hit");
   console.log("📌 SUPABASE_URL:", process.env.SUPABASE_URL);
   console.log("📌 SUPABASE_SERVICE_ROLE_KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "✅ Loaded" : "❌ Missing");
 
-  const form = formidable({ multiples: false }); // create form instance
+  const form = formidable({ multiples: false });
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
@@ -86,67 +172,88 @@ app.post('/api/upload-event', (req, res) => {
     try {
       const fileArray = Array.isArray(file) ? file : [file];
       const uploadedFile = fileArray[0];
-      
 
-
-
-
-      // ✅ More debug logs before Supabase call
       console.log("📌 Uploaded file:", uploadedFile.originalFilename);
       console.log("📌 File size:", uploadedFile.size);
 
-
+      // ✅ Upload image to Supabase Storage
       const fileBuffer = await fs.readFile(uploadedFile.filepath);
       const fileExt = uploadedFile.originalFilename?.split('.').pop() || 'jpg';
       const fileName = `event-${Date.now()}.${fileExt}`;
 
-      const { data, error } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('event-images')
         .upload(fileName, fileBuffer, {
           contentType: uploadedFile.mimetype,
           upsert: false,
         });
 
-      if (error) {
-        console.error("Upload error:", error);
+      if (uploadError) {
+        console.error("Upload error:", uploadError);
         return res.status(500).json({ 
-        error: 'Upload to Supabase Storage failed', 
-        details: error.message 
-      });
-    }
+          error: 'Upload to Supabase Storage failed', 
+          details: uploadError.message 
+        });
+      }
 
-
+      // ✅ Get Public URL
       const { data: publicData } = supabase.storage
         .from('event-images')
         .getPublicUrl(fileName);
 
       const publicUrl = publicData.publicUrl;
-
       console.log("📌 Public URL generated:", publicUrl);
 
+      // ✅ Insert full event details into 'events' table
+      const { error: dbError } = await supabase
+        .from('events')
+        .insert([{
+          title: fields.title,
+          date: fields.date,
+          time: fields.time || null,
+          location: fields.location || null,
+          category: fields.category || null,
+          description: fields.description || null,
+          image_url: publicUrl
+        }]);
 
-
-
-
-
-      const insertResult = await supabase
-        .from('event_images')
-        .insert([{ file_name: fileName, url: publicUrl }]);
-
-      if (insertResult.error) {
-        console.error("DB insert error:", insertResult.error);
+      if (dbError) {
+        console.error("DB insert error:", dbError);
+        return res.status(500).json({ error: 'Database insert failed', details: dbError.message });
       }
 
       res.status(200).json({
-        message: 'Upload successful',
+        message: 'Event created successfully',
         imageUrl: publicUrl,
       });
+
     } catch (uploadError) {
       console.error("Upload processing error:", uploadError);
       res.status(500).json({ error: 'Failed to process upload' });
     }
   });
 });
+
+
+    // ✅ Fetch events route
+    app.get('/api/get-events', async (req, res) => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .order('date', { ascending: true });
+
+        if (error) {
+          console.error('Fetch events error:', error);
+          return res.status(500).json({ error: 'Failed to fetch events' });
+        }
+
+        res.json(data);
+      } catch (err) {
+        console.error('Server error:', err);
+        res.status(500).json({ error: 'Server error' });
+      }
+    });
 
 
 // Delete event
