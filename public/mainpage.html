@@ -3185,8 +3185,7 @@ rel<!DOCTYPE html>
             // Get text info
             const title = card.querySelector('h3').textContent;
             const location = card.querySelector('.event-meta span:nth-child(1)').textContent;
-            const time = card.querySelector('.event-meta span:nth-child(2)').textContent;
-            const description = card.querySelector('p').textContent;
+            const description = card.querySelector('.event-description').textContent;
 
             // ✅ Get the image src
             const imageUrl = card.querySelector('img').getAttribute('src');
@@ -3194,7 +3193,6 @@ rel<!DOCTYPE html>
             // Fill modal content
             document.getElementById('eventModalTitle').textContent = title;
             document.getElementById('eventModalLocation').textContent = location;
-            document.getElementById('eventModalTime').textContent = time;
             document.getElementById('eventModalDescription').textContent = description;
 
             // ✅ Set image in modal
