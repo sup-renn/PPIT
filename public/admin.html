@@ -347,12 +347,24 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(139,21,56,0.3);
         }
+
         /*Kelola Event PART*/
+        .event-form-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+        }
+
         .event-form {
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        max-width: 500px;
+        width: 100%;
+        max-width: 500px; /* ✅ Controls the width */
+        background: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .event-form label {
@@ -733,7 +745,7 @@
         </aside>
 
     <!-- Main content -->
-        <div class="content">
+        <div class="main-content">
             <!-- Events Management Section -->
             <div id="eventsSection" class="content-section">
                 <h2>Tambah Event Baru</h2>
@@ -839,42 +851,86 @@
                     </button>
                 </div>
 
-                <!-- ✅ Added class="event-form" and removed inline style -->
-            <form id="eventForm" class="event-form" enctype="multipart/form-data" method="post" style="display:none;">
-                <label>Nama Event</label>
-                <input type="text" name="title" required>
+                <!-- ✅ Centered Event Form -->
+                <div class="event-form-wrapper">
+                    <form id="eventForm" class="event-form" enctype="multipart/form-data" method="post" style="display:none;">
+                        <label>Nama Event</label>
+                        <input type="text" name="title" required>
 
-                <label>Tanggal</label>
-                <input type="date" name="date" required>
+                        <label>Tanggal</label>
+                        <input type="date" name="date" required>
 
-                <label>Waktu</label>
-                <input type="time" name="time">
+                        <label>Waktu</label>
+                        <input type="time" name="time">
 
-                <label>Lokasi</label>
-                <input type="text" name="location">
+                        <label>Lokasi</label>
+                        <input type="text" name="location">
 
-                <label>Kategori</label>
-                <select name="category" required>
-                    <option value="">Pilih Kategori</option>
-                    <option value="upcoming">Mendatang</option>
-                    <option value="ongoing">Berlangsung</option>
-                    <option value="past">Selesai</option>
-                </select>
+                        <label>Kategori</label>
+                        <select name="category" required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="upcoming">Mendatang</option>
+                            <option value="ongoing">Berlangsung</option>
+                            <option value="past">Selesai</option>
+                        </select>
 
-                <label>Deskripsi</label>
-                <textarea name="description"></textarea>
+                        <label>Deskripsi</label>
+                        <textarea name="description"></textarea>
 
-                <label>Gambar Event</label>
-                <input type="file" name="eventImage" accept="image/*" required id="eventImageInput">
+                        <label>Gambar Event</label>
+                        <input type="file" name="eventImage" accept="image/*" required id="eventImageInput">
 
-                <!-- ✅ Submit and Cancel buttons inside the form -->
-                <button type="button" class="btn-secondary" onclick="hideEventForm()">Batal</button>
-                <button type="submit" class="btn-primary" id="saveEventBtn">Upload Event</button>
-            </form>
-
+                        <!-- ✅ Action Buttons -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="hideEventForm()">Batal</button>
+                            <button type="submit" class="btn-primary" id="saveEventBtn">Upload Event</button>
+                        </div>
+                    </form>
+                </div>
 
                 <hr style="margin: 2rem 0;">
 
+                
+                <!-- ✅ Centered Event Form -->
+                <div class="event-form-wrapper">
+                    <form id="eventForm" class="event-form" enctype="multipart/form-data" method="post" style="display:none;">
+                        <label>Nama Event</label>
+                        <input type="text" name="title" required>
+
+                        <label>Tanggal</label>
+                        <input type="date" name="date" required>
+
+                        <label>Waktu</label>
+                        <input type="time" name="time">
+
+                        <label>Lokasi</label>
+                        <input type="text" name="location">
+
+                        <label>Kategori</label>
+                        <select name="category" required>
+                            <option value="">Pilih Kategori</option>
+                            <option value="upcoming">Mendatang</option>
+                            <option value="ongoing">Berlangsung</option>
+                            <option value="past">Selesai</option>
+                        </select>
+
+                        <label>Deskripsi</label>
+                        <textarea name="description"></textarea>
+
+                        <label>Gambar Event</label>
+                        <input type="file" name="eventImage" accept="image/*" required id="eventImageInput">
+
+                        <!-- ✅ Action Buttons -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="hideEventForm()">Batal</button>
+                            <button type="submit" class="btn-primary" id="saveEventBtn">Upload Event</button>
+                        </div>
+                    </form>
+                </div>
+
+                <hr style="margin: 2rem 0;">
+
+                <!-- ✅ Events Table -->
                 <table class="data-table">
                     <thead>
                         <tr>
