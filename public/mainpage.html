@@ -1025,7 +1025,7 @@ venve<!DOCTYPE html>
 
         .event-image {
             width: 100%;
-            height: 70%; /* Top part of the card for image */
+            height: 100%; /* Top part of the card for image */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1073,9 +1073,9 @@ venve<!DOCTYPE html>
 
         .event-meta {
             display: flex;
-            gap: 0.9rem;
+            gap: 0.6rem;
             margin-bottom: 0.5rem;
-            font-size: 1.1rem;   /* Bigger meta info */
+            font-size: 0.8rem;   /* Bigger meta info */
             color: var(--text-dark);
             font-weight: 400;
         }
@@ -2759,7 +2759,6 @@ venve<!DOCTYPE html>
                             <h3>${event.title}</h3>
                             <div class="event-meta">
                                 <span>📍 ${event.location || ''}</span>
-                                <span>🕐 ${event.time || ''}</span>
                             </div>
                             <p class="event-description" style="display:none;">${event.description || ''}</p>
                         </div>
