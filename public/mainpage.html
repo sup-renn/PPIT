@@ -3198,6 +3198,8 @@ rel<!DOCTYPE html>
 
             // Convert **bold** to <strong>
             const formattedDescription = description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const formattedDescription = description.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
 
             // ✅ Get the image src
             const imageUrl = card.querySelector('img').getAttribute('src');
