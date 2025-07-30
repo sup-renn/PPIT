@@ -1109,6 +1109,13 @@ rel<!DOCTYPE html>
         .event-card {
             cursor: pointer;
         }
+
+        #eventModalDescription {
+            white-space: pre-line; /* keeps user line breaks */
+            line-height: 1.6;      /* better readability */
+            font-size: 1rem;
+            color: #333;
+        }
         
         /* Body blur when modal open */
         body.modal-open {
@@ -2389,6 +2396,8 @@ rel<!DOCTYPE html>
     </div>
 
     
+
+    
     <!-- Gallery Section -->
     <section id="gallery" class="gallery-section">
         <div class="gallery-container">
@@ -3187,13 +3196,17 @@ rel<!DOCTYPE html>
             const location = card.querySelector('.event-meta span:nth-child(1)').textContent;
             const description = card.querySelector('.event-description').textContent;
 
+            // Convert **bold** to <strong>
+            const formattedDescription = description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
             // ✅ Get the image src
             const imageUrl = card.querySelector('img').getAttribute('src');
 
             // Fill modal content
             document.getElementById('eventModalTitle').textContent = title;
             document.getElementById('eventModalLocation').textContent = location;
-            document.getElementById('eventModalDescription').textContent = description;
+            // Use innerHTML to render the <strong> tags
+            document.getElementById('eventModalDescription').innerHTML = formattedDescription;
 
             // ✅ Set image in modal
             document.getElementById('eventModalImage').setAttribute('src', imageUrl);
