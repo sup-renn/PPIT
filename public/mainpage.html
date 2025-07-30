@@ -975,7 +975,7 @@ venve<!DOCTYPE html>
         .events-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* ✅ bigger squares */
-            gap: 1rem; /* ✅ reduce gap between cards */
+            gap: 0.4rem; /* ✅ reduce gap between cards */
             justify-content: center;
         }
 
@@ -990,6 +990,11 @@ venve<!DOCTYPE html>
             display: flex;
             flex-direction: column;
         }
+
+        .event-description {
+            display: none; /* hide in preview */
+        }
+
 
 
         .event-card::before {
@@ -2756,7 +2761,7 @@ venve<!DOCTYPE html>
                                 <span>📍 ${event.location || ''}</span>
                                 <span>🕐 ${event.time || ''}</span>
                             </div>
-                            <p>${event.description || ''}</p>
+                            <p class="event-description" style="display:none;">${event.description || ''}</p>
                         </div>
                     </div>
                     `;
