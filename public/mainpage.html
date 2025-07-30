@@ -3197,8 +3197,9 @@ rel<!DOCTYPE html>
             const description = card.querySelector('.event-description').textContent;
 
             // Convert **bold** to <strong>
-            const formattedDescription = description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            const formattedDescription = description.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            let formattedDescription = description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            //convert *italic* to <em>
+            formattedDescription = description.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
 
             // ✅ Get the image src
