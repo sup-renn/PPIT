@@ -1,4 +1,4 @@
-venve<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -1006,7 +1006,7 @@ venve<!DOCTYPE html>
             height: 100%;
             background: linear-gradient(135deg, rgba(139,21,56,0.9), rgba(164,30,74,0.9));
             opacity: 0;
-            transition: opacity 1.0s ease;
+            transition: opacity 3.0s ease;
             z-index: 1;
         }
 
@@ -1025,7 +1025,7 @@ venve<!DOCTYPE html>
 
         .event-image {
             width: 100%;
-            height: 220px; /* Top part of the card for image | fixed height */
+            height: 70%; /* Top part of the card for image | fixed height */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1035,7 +1035,9 @@ venve<!DOCTYPE html>
         .event-image img {
             width: 100%;
             height: 100%;
-            object-fit: contain;   /* fills area */
+            object-fit: cover;   /* fills area */
+            object-position: center; /*center the image*/
+            display: block;
             border-top-left-radius: 12px;
             border-top-right-radius: 12px;
         }
