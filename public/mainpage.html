@@ -974,19 +974,19 @@ venve<!DOCTYPE html>
 
         .events-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* ✅ bigger squares */
+            gap: 1rem; /* ✅ reduce gap between cards */
+            justify-content: center;
         }
 
         .event-card {
-            width: 280px;
-            height: 280px;  /* 👈 Make it square */
+            width: 320px;
+            height: 320px;  /* 👈 Make it square */
             background: white;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
-            margin: auto;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
         }

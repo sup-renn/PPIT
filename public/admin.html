@@ -850,46 +850,6 @@
                         Tambah Event
                     </button>
                 </div>
-
-                <!-- ✅ Centered Event Form -->
-                <div class="event-form-wrapper">
-                    <form id="eventForm" class="event-form" enctype="multipart/form-data" method="post" style="display:none;">
-                        <label>Nama Event</label>
-                        <input type="text" name="title" required>
-
-                        <label>Tanggal</label>
-                        <input type="date" name="date" required>
-
-                        <label>Waktu</label>
-                        <input type="time" name="time">
-
-                        <label>Lokasi</label>
-                        <input type="text" name="location">
-
-                        <label>Kategori</label>
-                        <select name="category" required>
-                            <option value="">Pilih Kategori</option>
-                            <option value="upcoming">Mendatang</option>
-                            <option value="ongoing">Berlangsung</option>
-                            <option value="past">Selesai</option>
-                        </select>
-
-                        <label>Deskripsi</label>
-                        <textarea name="description"></textarea>
-
-                        <label>Gambar Event</label>
-                        <input type="file" name="eventImage" accept="image/*" required id="eventImageInput">
-
-                        <!-- ✅ Action Buttons -->
-                        <div class="form-actions">
-                            <button type="button" class="btn-secondary" onclick="hideEventForm()">Batal</button>
-                            <button type="submit" class="btn-primary" id="saveEventBtn">Upload Event</button>
-                        </div>
-                    </form>
-                </div>
-
-                <hr style="margin: 2rem 0;">
-
                 
                 <!-- ✅ Centered Event Form -->
                 <div class="event-form-wrapper">
