@@ -1462,23 +1462,25 @@
 
 
         //changes here, for the modal picture to pop up
-        function openEventModal(eventId) {
-            const events = storage.get('events');
-            const event = events.find(ev => ev.id === eventId);
-            if (!event) return;
+            function openEventModal(eventId) {
+                const events = storage.get('events');
+                const event = events.find(ev => ev.id === eventId);
+                if (!event) return;
 
-            const modal = document.getElementById('eventModal');
-            const modalContent = document.getElementById('eventModalContent');
+                const getText = (value) => Array.isArray(value) ? value[0] : value;
 
-            modalContent.innerHTML = `
-                ${event.imageUrl ? `<img src="${event.imageUrl}" alt="${event.title}" style="max-width:100%; border-radius:8px; margin-bottom:1rem;">` : ''}
-                <h2>${event.title}</h2>
-                <p><strong>Tanggal:</strong> ${event.date}</p>
-                <p><strong>Lokasi:</strong> ${event.location}</p>
-                <p>${event.description}</p>
-            `;
+                const modal = document.getElementById('eventModal');
+                const modalContent = document.getElementById('eventModalContent');
 
-            modal.classList.add('active');
+                modalContent.innerHTML = `
+                    ${event.imageUrl ? `<img src="${event.imageUrl}" alt="${getText(event.title)}" style="max-width:100%; border-radius:8px; margin-bottom:1rem;">` : ''}
+                    <h2>${getText(event.title)}</h2>
+                    <p><strong>Tanggal:</strong> ${getText(event.date)}</p>
+                    <p><strong>Lokasi:</strong> ${getText(event.location)}</p>
+                    <p>${getText(event.description)}</p>
+                `;
+
+                modal.classList.add('active');
             }
 
             function closeEventModal() {

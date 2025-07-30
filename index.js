@@ -87,10 +87,6 @@ app.post('/login/verify', (req, res) => {
 //       const fileArray = Array.isArray(file) ? file : [file];
 //       const uploadedFile = fileArray[0];
       
-
-
-
-
 //       // ✅ More debug logs before Supabase call
 //       console.log("📌 Uploaded file:", uploadedFile.originalFilename);
 //       console.log("📌 File size:", uploadedFile.size);
@@ -123,11 +119,6 @@ app.post('/login/verify', (req, res) => {
 //       const publicUrl = publicData.publicUrl;
 
 //       console.log("📌 Public URL generated:", publicUrl);
-
-
-
-
-
 
 //       const insertResult = await supabase
 //         .from('event_images')
@@ -163,6 +154,11 @@ app.post('/api/upload-event', (req, res) => {
       console.error("Form parse error:", err);
       return res.status(500).json({ error: 'File parsing failed' });
     }
+
+      // Convert all fields to single values if they are arrays
+      Object.keys(fields).forEach(key => {
+        if (Array.isArray(fields[key])) fields[key] = fields[key][0];
+      });
 
     const file = files.eventImage;
     if (!file) {
